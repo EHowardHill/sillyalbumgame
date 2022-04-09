@@ -27,5 +27,5 @@ def pickNew():
 
 # Serve main site
 @app.route('/')
-def hello(name=None):
+def main():
     return render_template('index.html')
