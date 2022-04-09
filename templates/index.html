@@ -12,19 +12,36 @@
 
         <!-- Custom styling CSS -->
         <style>
+            @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
             body {
                 background-image: url('https://upload.wikimedia.org/wikipedia/en/1/11/Dreamland_%28Glass_Animals%29.png');
                 background-size: cover;
-                backdrop-filter: blur(32px);
+                backdrop-filter: blur(64px);
+                margin: 0px;
+                padding: 0px;
+                font-family: 'Lato', sans-serif;
             }
 
             .float {
-                box-shadow: 0 6px 10px rgb(0 0 0 / 0.2);
+                box-shadow: 5px 5px 5px #222;
             }
 
             .album {
                 width: 480px;
                 height: 480px;
+            }
+
+            .btn {
+                font-size: 150%;
+            }
+
+            .input-group-text {
+                font-size: 150%;
+            }
+
+            .form-control {
+                font-size: 150%;
             }
 
             @media screen and (max-width: 500px) {
@@ -36,28 +53,60 @@
         </style>
     </head>
     <body>
+        <script>
+            function pixelateImage(originalImage, pixelationFactor) {
+            const canvas = document.createElement("canvas");
+            const context = canvas.getContext("2d");
+            const originalWidth = originalImage.width;
+            const originalHeight = originalImage.height;
+            const canvasWidth = originalWidth;
+            const canvasHeight = originalHeight;
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+            context.drawImage(originalImage, 0, 0, originalWidth, originalHeight);
+            const originalImageData = context.getImageData(
+                0,
+                0,
+                originalWidth,
+                originalHeight
+            ).data;
+            if (pixelationFactor !== 0) {
+                for (let y = 0; y < originalHeight; y += pixelationFactor) {
+                for (let x = 0; x < originalWidth; x += pixelationFactor) {
+                    // extracting the position of the sample pixel
+                    const pixelIndexPosition = (x + y * originalWidth) * 4;
+                    // drawing a square replacing the current pixels
+                    context.fillStyle = `rgba(
+                    ${originalImageData[pixelIndexPosition]},
+                    ${originalImageData[pixelIndexPosition + 1]},
+                    ${originalImageData[pixelIndexPosition + 2]},
+                    ${originalImageData[pixelIndexPosition + 3]}
+                    )`;
+                    context.fillRect(x, y, pixelationFactor, pixelationFactor);
+                }
+                }
+            }
+            originalImage.src = canvas.toDataURL();
+            }
+        </script>
+
         <div style="height: 16px"> </div>
         <div style="display: flex;">
             <div style="flex: 1;"> </div>
             <div style="display: flex; flex-direction: column;">
 
-                <div class="card" style="">
-                    <img class="float album" src="https://upload.wikimedia.org/wikipedia/en/1/11/Dreamland_%28Glass_Animals%29.png" />
-                    <div class="card-body">
-                        <h5 class="card-title">Tries Left: 5</h5>
+                <img style="margin-bottom: 16px;" id="pixelatedImage" class="float album" src="https://upload.wikimedia.org/wikipedia/en/1/11/Dreamland_%28Glass_Animals%29.png" />
 
-                        <div class="input-group mb-3">
-                            <span class="input-group-text" id="basic-addon1">Guess:</span>
-                            <input type="text" class="form-control" placeholder="Donda" aria-label="Donda" aria-describedby="basic-addon1">
-                          </div>
-        
-                        <div class="btn-group" style="width:100%" role="group" aria-label="Basic example">
-                            <button type="button" class="btn btn-secondary">Skip</button>
-                            <button type="button" class="btn btn-primary">Submit</button>
-                        </div>
-                    </div>
+                <div class="input-group mb-3 float">
+                    <span class="input-group-text" id="basic-addon1">Guess...</span>
+                    <input type="text" class="form-control" placeholder="Donda" aria-label="Donda" aria-describedby="basic-addon1">
+                  </div>
+
+                <div style="display: flex;">
+                    <button type="button" class="btn btn-light float">Skip</button>
+                    <div style="flex: 1;"> </div>
+                    <button type="button" class="btn btn-light float">Submit</button>
                 </div>
-
 
             </div>
             <div style="flex: 1;"> </div>
