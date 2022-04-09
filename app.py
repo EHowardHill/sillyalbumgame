@@ -1,10 +1,13 @@
 import os, pprint, billboard, random, json
 from platform import release
 import discogs_client
-import flask
+from flask import Flask
+from flask import render_template
 
 discogsToken = "ynOcwonUjpPJlDbHxHwPrGUWBoUwYeTSOqyNkXrt"
+app = Flask(__name__)
 
+# Return album cover thing
 def pickNew():
     ready = False
     releases = ""
@@ -22,4 +25,7 @@ def pickNew():
     releases = releases[:releases.index("'")]    
     return(str(releases))
 
-print(pickNew())
+# Serve main site
+@app.route('/')
+def hello(name=None):
+    return render_template('index.html')
