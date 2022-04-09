@@ -1,0 +1,4 @@
+billboard.py
+flask
+flask-sqlalchemy
+python3-discogs-client
