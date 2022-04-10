@@ -1,40 +1,29 @@
-import os, pprint, billboard, random, json
-from platform import release
-import discogs_client
-from flask import Flask
-from flask import render_template
 
-discogsToken = "ynOcwonUjpPJlDbHxHwPrGUWBoUwYeTSOqyNkXrt"
+# Libraries to import
+from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import func
+
+# Flask initialization settings
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///records.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+# The structure of the data from records.db
 class Album(db.Model):
     __tablename__ = "album"
-    id = db.Column(db.Integer, primary_key=True)
-    file = db.Column(db.String)
+    file = db.Column(db.String, primary_key=True)
     artist = db.Column(db.String)
     album = db.Column(db.String)
-
-# Return album cover thing
-def pickNew():
-    ready = False
-    releases = ""
-    while not ready:
-        try:
-            d = discogs_client.Client('SillyAlbumGame/0.1', user_token=discogsToken)
-            chart = billboard.ChartData('hot-100')
-            song = random.choice(chart)
-            releases = d.search(song.title, artist=song.artist, type='release').page(0)[0].images[0]
-            ready = True
-        except:
-            pass
-    releases = str(releases)
-    releases = releases[releases.index("'uri': '")+8:]
-    releases = releases[:releases.index("'")]    
-    return(str(releases))
 
 # Serve main site
 @app.route('/')
 def main():
-    return render_template('index.html')
+    return render_template(
+
+        # The HTML file for the results
+        'index.html',
+
+        # Sets the 'file' variable to a random filename
+        file=Album.query.order_by(func.random()).first().file)

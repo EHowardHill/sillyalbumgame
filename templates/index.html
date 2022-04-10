@@ -15,7 +15,7 @@
             @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 
             body {
-                background-image: url('https://upload.wikimedia.org/wikipedia/en/1/11/Dreamland_%28Glass_Animals%29.png');
+                background-image: url("{{ url_for('static', filename=file) }}");
                 background-size: cover;
                 backdrop-filter: blur(64px);
                 margin: 0px;
@@ -95,13 +95,16 @@
             <div style="flex: 1;"> </div>
             <div style="display: flex; flex-direction: column;">
 
-                <img style="margin-bottom: 16px;" id="pixelatedImage" class="float album" src="https://upload.wikimedia.org/wikipedia/en/1/11/Dreamland_%28Glass_Animals%29.png" />
+                <!-- Actual album art -->
+                <img style="margin-bottom: 16px;" id="pixelatedImage" class="float album" src="{{ url_for('static', filename=file) }}" />
 
+                <!-- text field to enter suggestion -->
                 <div class="input-group mb-3 float">
                     <span class="input-group-text" id="basic-addon1">Guess...</span>
                     <input type="text" class="form-control" placeholder="Donda" aria-label="Donda" aria-describedby="basic-addon1">
                   </div>
 
+                <!-- Buttons -->
                 <div style="display: flex;">
                     <button type="button" class="btn btn-light float">Skip</button>
                     <div style="flex: 1;"> </div>
