@@ -6,6 +6,15 @@ from flask import render_template
 
 discogsToken = "ynOcwonUjpPJlDbHxHwPrGUWBoUwYeTSOqyNkXrt"
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+db = SQLAlchemy(app)
+
+class Album(db.Model):
+    __tablename__ = "album"
+    id = db.Column(db.Integer, primary_key=True)
+    file = db.Column(db.String)
+    artist = db.Column(db.String)
+    album = db.Column(db.String)
 
 # Return album cover thing
 def pickNew():
