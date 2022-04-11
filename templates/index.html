@@ -10,6 +10,8 @@
         <!-- JavaScript Bundle with Popper -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
+        <script src="{{ url_for('static', filename='pixelate.min.js') }}"></script>
+
         <!-- Custom styling CSS -->
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
@@ -54,40 +56,15 @@
     </head>
     <body>
         <script>
-            function pixelateImage(originalImage, pixelationFactor) {
-            const canvas = document.createElement("canvas");
-            const context = canvas.getContext("2d");
-            const originalWidth = originalImage.width;
-            const originalHeight = originalImage.height;
-            const canvasWidth = originalWidth;
-            const canvasHeight = originalHeight;
-            canvas.width = canvasWidth;
-            canvas.height = canvasHeight;
-            context.drawImage(originalImage, 0, 0, originalWidth, originalHeight);
-            const originalImageData = context.getImageData(
-                0,
-                0,
-                originalWidth,
-                originalHeight
-            ).data;
-            if (pixelationFactor !== 0) {
-                for (let y = 0; y < originalHeight; y += pixelationFactor) {
-                for (let x = 0; x < originalWidth; x += pixelationFactor) {
-                    // extracting the position of the sample pixel
-                    const pixelIndexPosition = (x + y * originalWidth) * 4;
-                    // drawing a square replacing the current pixels
-                    context.fillStyle = `rgba(
-                    ${originalImageData[pixelIndexPosition]},
-                    ${originalImageData[pixelIndexPosition + 1]},
-                    ${originalImageData[pixelIndexPosition + 2]},
-                    ${originalImageData[pixelIndexPosition + 3]}
-                    )`;
-                    context.fillRect(x, y, pixelationFactor, pixelationFactor);
-                }
-                }
+            var pixelation = 0.01;
+
+            function refresh() {
+                $('#pixelatedImage').pixelate({ value: pixelation, reveal: false });
             }
-            originalImage.src = canvas.toDataURL();
-            }
+
+            $(document).ready(function() {
+                refresh();
+            });
         </script>
 
         <div style="height: 16px"> </div>
