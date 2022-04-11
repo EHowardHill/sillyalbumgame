@@ -20,10 +20,13 @@ class Album(db.Model):
 # Serve main site
 @app.route('/')
 def main():
+
     return render_template(
 
         # The HTML file for the results
         'index.html',
 
         # Sets the 'file' variable to a random filename
-        file=Album.query.order_by(func.random()).first().file)
+        file=Album.query.order_by(func.random()).first().file,
+        albums=','.join(["\"" + str(x.album) + " (" + str(x.artist) + ")\"" for x in Album.query.all()])
+    )

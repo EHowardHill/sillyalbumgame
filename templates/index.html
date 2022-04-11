@@ -4,12 +4,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" /> 
 
         <!-- These are my jQuery and Bootstrap libraries -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <!-- CSS only -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-        <!-- JavaScript Bundle with Popper -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-
+        <link href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.css" rel="stylesheet"/>
+        <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/css/bootstrap.css" rel="stylesheet"/>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/js/bootstrap.js"></script>
+        
         <script src="{{ url_for('static', filename='pixelate.min.js') }}"></script>
 
         <!-- Custom styling CSS -->
@@ -30,8 +30,8 @@
             }
 
             .album {
-                width: 480px;
-                height: 480px;
+                width: 500px;
+                height: 500px;
             }
 
             .btn {
@@ -46,6 +46,8 @@
                 font-size: 150%;
             }
 
+            .ui-autocomplete { max-height: 200px; overflow-y: scroll; overflow-x: hidden;}
+
             @media screen and (max-width: 500px) {
                 .album {
                     width: 100%;
@@ -56,14 +58,42 @@
     </head>
     <body>
         <script>
-            var pixelation = 0.01;
+            var pixelation = 0;
 
-            function refresh() {
+            function pixel() {
+                pixelation += 0.01;
+                $('#albumArt').find('canvas').remove();
                 $('#pixelatedImage').pixelate({ value: pixelation, reveal: false });
             }
 
             $(document).ready(function() {
-                refresh();
+
+                // If the image doesn't exist, refresh
+                var http = new XMLHttpRequest();
+                http.open('HEAD', "{{ url_for('static', filename=file) }}", false);
+                http.send();
+                if (http.status == 404) window.location.reload();
+
+                // Make sure rendering doesn't break the program
+                try {
+                    pixel();
+                } catch {
+                    window.location.reload();
+                }
+                
+                // Handle skip function
+                $("#btnSkip").click(function() {
+                    pixel();
+                });
+
+                var availableTags = [{{albums|safe}}];
+                
+                $(".autocomplete").autocomplete({
+                    source: availableTags,
+                    limit: 5
+                });
+
+                setTimeout(pixel, 100);
             });
         </script>
 
@@ -73,19 +103,22 @@
             <div style="display: flex; flex-direction: column;">
 
                 <!-- Actual album art -->
-                <img style="margin-bottom: 16px;" id="pixelatedImage" class="float album" src="{{ url_for('static', filename=file) }}" />
+                <div id="albumArt">
+                    <img id="pixelatedImage" class="float album" src="{{ url_for('static', filename=file) }}" />
+                </div>
 
                 <!-- text field to enter suggestion -->
-                <div class="input-group mb-3 float">
-                    <span class="input-group-text" id="basic-addon1">Guess...</span>
-                    <input type="text" class="form-control" placeholder="Donda" aria-label="Donda" aria-describedby="basic-addon1">
-                  </div>
+                <div class="container" style="width: 500px; margin-top: 16px;">
+                    <div class="form-group" style="max-height: 75px">
+                      <input class="form-control autocomplete" placeholder="Enter Album Name (Artist Name)" />
+                    </div>
 
-                <!-- Buttons -->
-                <div style="display: flex;">
-                    <button type="button" class="btn btn-light float">Skip</button>
-                    <div style="flex: 1;"> </div>
-                    <button type="button" class="btn btn-light float">Submit</button>
+                    <!-- Buttons -->
+                    <div style="display: flex;">
+                        <button id="btnSkip" type="button" class="btn btn-light float">Skip</button>
+                        <div style="flex: 1;"> </div>
+                        <button id="btnSubmit" type="button" class="btn btn-light float">Submit</button>
+                    </div>
                 </div>
 
             </div>
