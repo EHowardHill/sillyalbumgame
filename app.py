@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 # You have to choose an arbitrary secret key in order to
 # encrypt the stored result. It can be literally anything
-app.secret_key = "sillybilly"
+app.secret_key = "billy silly"
 app.config['SESSION_TYPE'] = 'refis'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///records.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

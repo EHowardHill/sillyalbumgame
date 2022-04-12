@@ -96,7 +96,7 @@
             }
 
             function pixel() {
-                pixelation += 0.01;
+                pixelation += 0.005;
                 $('#albumArt').find('canvas').remove();
                 $('#pixelatedImage').pixelate({ value: pixelation, reveal: false });
             }
@@ -137,8 +137,22 @@
                 
                 // Handle skip function
                 $("#btnSkip").click(function() {
-                    attempts++;
-                    pixel();
+                    // if too many attempts
+                    if (attempts > 5) {
+                        $("#attempts").text(attempts);
+                        $("#copyBtn").remove();
+                        $.post("/score", {
+                            "score":attempts,
+                            "success":false
+                        });
+                        countdown();
+                        $(".overlay").css("top", "0");
+
+                    // else just skip
+                    } else {
+                        attempts++;
+                        pixel();
+                    }
                 });
 
                 // Handle submit function
@@ -146,7 +160,7 @@
 
                     // if too many attempts
                     if (attempts > 5) {
-                        attempts += 1;
+                        $("#attempts").text(attempts);
                         $("#copyBtn").remove();
                         $.post("/score", {
                             "score":attempts,
