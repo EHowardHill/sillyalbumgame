@@ -78,6 +78,17 @@
         </style>
     </head>
     <body>
+        <!-- credits -->
+        <div class="bottomright">
+            <div style="display: flex;">
+                <div style="flex: 1;">
+                    <img src="{{ url_for('static', filename='creature.png') }}">
+                    <div>made by @cheemsitz and cinemint</div>
+                    <div>april 2022</div>
+                </div>
+            </div>
+        </div>
+
         <script>
             var pixelation = 0;
             var attempts = 0;
@@ -250,17 +261,6 @@
 
             </div>
             <div style="flex: 1;"> </div>
-        </div>
-
-        <!-- credits -->
-        <div class="bottomright">
-            <div style="display: flex;">
-                <div style="flex: 1;">
-                    <img src="{{ url_for('static', filename='creature.png') }}">
-                    <div>made by @cheemsitz and cinemint</div>
-                    <div>april 2022</div>
-                </div>
-            </div>
         </div>
     </body>
 </html>
