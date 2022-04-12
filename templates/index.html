@@ -125,6 +125,7 @@
                 
                 // Handle skip function
                 $("#btnSkip").click(function() {
+                    attempts++;
                     pixel();
                 });
 
@@ -141,21 +142,30 @@
 
                 // Handle submit function
                 $("#btnSubmit").click(function() {
-                    attempts += 1;
-                    $("#attempts").text(attempts);
 
-                    var name = $("#enterInfo").val();
+                    // if too many attempts
+                    if (attempts > 5) {
+                        attempts += 1;
+                        $("#btnGiveUp").click();
 
-                    // Verify correctness
-                    if (name.includes("{{album}}") && name.includes("{{artist}}")) {
-                        $.post("/score", {
-                            "score":attempts,
-                            "success":true
-                        });
-                        countdown();
-                        $(".overlay").css("top", "0")
+                    // otherwise we chill
                     } else {
-                        pixel();
+                        attempts += 1;
+                        $("#attempts").text(attempts);
+
+                        var name = $("#enterInfo").val();
+
+                        // Verify correctness
+                        if (name.includes("{{album}}") && name.includes("{{artist}}")) {
+                            $.post("/score", {
+                                "score":attempts,
+                                "success":true
+                            });
+                            countdown();
+                            $(".overlay").css("top", "0")
+                        } else {
+                            pixel();
+                        }
                     }
                 });
 
