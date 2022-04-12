@@ -17,9 +17,7 @@
             @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 
             body {
-                background-image: url("{{ url_for('static', filename=file) }}");
-                background-size: cover;
-                backdrop-filter: blur(64px);
+                background-color: #151515;
                 margin: 0px;
                 padding: 0px;
                 width: 100%;
@@ -60,6 +58,16 @@
                 transition: 0.5s;
             }
 
+            .bottomright {
+                position: fixed;
+                right: 0px; bottom: 0px;
+                width: 100%;
+                height:160px;
+                text-align: right;
+                padding: 5px;
+                color:white
+            }
+
             @media screen and (max-width: 500px) {
                 .album {
                     width: 100%;
@@ -94,11 +102,15 @@
             }
 
             function updateClipboard(newClip) {
-                navigator.clipboard.writeText(newClip).then(function() {
-                    /* clipboard successfully set */
-                }, function() {
-                    /* clipboard write failed */
-                });
+                try {
+                    navigator.clipboard.writeText(newClip).then(function() {
+                        /* clipboard successfully set */
+                    }, function() {
+                        /* clipboard write failed */
+                    });
+                } catch {
+                    alert("There was an error copying your score. Thanks for being patient.");
+                }
             }
 
             $(document).ready(function() {
@@ -185,7 +197,7 @@
             <div style="display: flex;">
                 <div style="flex: 1;"> </div>
                 <div style="text-align: center; margin-top: 16px;">
-                    <img src="{{ url_for('static', filename=file) }}" style="width: 250px; height: 250px;" />
+                    <img src="{{ url_for('static', filename=file) }}" style="width: 450px; height: 450px;" />
                     <div style="font-size: 72px; font-weight: bolder">{{album}}</div>
                     <div style="font-size: 48px; font-weight: lighter">{{artist}}</div>
                     <div> </div>
@@ -223,6 +235,17 @@
 
             </div>
             <div style="flex: 1;"> </div>
+        </div>
+
+        <!-- credits -->
+        <div class="bottomright">
+            <div style="display: flex;">
+                <div style="flex: 1;">
+                    <img src="{{ url_for('static', filename='creature.png') }}">
+                    <div>made by @cheemsitz and cinemint</div>
+                    <div>april 2022</div>
+                </div>
+            </div>
         </div>
     </body>
 </html>
