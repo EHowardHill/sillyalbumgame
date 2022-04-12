@@ -1,7 +1,7 @@
 <html>
     <head>
         <!-- To make it bearable on mobile -->
-        <meta name="viewport" content="width=device-width, initial-scale=1" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=0.5" /> 
 
         <!-- These are my jQuery and Bootstrap libraries -->
         <link href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.css" rel="stylesheet"/>
@@ -19,7 +19,7 @@
             body {
                 background-image: url("{{ url_for('static', filename=file) }}");
                 background-size: cover;
-                backdrop-filter: blur(256px);
+                backdrop-filter: blur(64px);
                 margin: 0px;
                 padding: 0px;
                 width: 100%;
@@ -129,24 +129,19 @@
                     pixel();
                 });
 
-                // Handle give up function
-                $("#btnGiveUp").click(function() {
-                    $("#copyBtn").remove();
-                    $.post("/score", {
-                        "score":attempts,
-                        "success":false
-                    });
-                    countdown();
-                    $(".overlay").css("top", "0");
-                });
-
                 // Handle submit function
                 $("#btnSubmit").click(function() {
 
                     // if too many attempts
                     if (attempts > 5) {
                         attempts += 1;
-                        $("#btnGiveUp").click();
+                        $("#copyBtn").remove();
+                        $.post("/score", {
+                            "score":attempts,
+                            "success":false
+                        });
+                        countdown();
+                        $(".overlay").css("top", "0");
 
                     // otherwise we chill
                     } else {
@@ -203,7 +198,7 @@
         </div>
 
         <div style="height: 16px"> </div>
-        <div style="display: flex; overflow-y: auto;">
+        <div class="filled" style="display: flex; overflow-y: auto;">
             <div style="flex: 1;"> </div>
             <div style="display: flex; flex-direction: column;">
 
@@ -221,8 +216,6 @@
                     <!-- Buttons -->
                     <div style="display: flex;">
                         <button id="btnSkip" type="button" class="btn btn-light float">Skip</button>
-                        <div style="flex: 1;"> </div>
-                        <button id="btnGiveUp" type="button" class="btn btn-light float">Give Up</button>
                         <div style="flex: 1;"> </div>
                         <button id="btnSubmit" type="button" class="btn btn-light float">Submit</button>
                     </div>
